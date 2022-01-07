@@ -1,0 +1,27 @@
+<div *ngIf="orders.length !==0">
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>Order ID</th>
+            <th>Order Type</th>
+            <th>Order Description</th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor='let order of orders; index as i;'>
+            <td><a [routerLink]="['/find-order',order.orderId]">{{ order.orderId }}</a></td>
+            <td>{{ order.orderType}}</td>
+            <td>{{ order.orderDescription}}</td>
+            <td><button class="btn btn-primary" style="margin-right:10px;" (click)="updateOrder(i)">Edit</button>
+                <button class="btn btn-danger" (click)="deleteOrder(i)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<div *ngIf="orders.length ===0" class="alert alert-info">
+    <h4>There are no open orders at the moment</h4>
+</div>
