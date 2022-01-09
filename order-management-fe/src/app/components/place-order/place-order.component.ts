@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Order } from 'src/app/model/order';
 import { OrderService } from 'src/app/services/order-service.service';
 
@@ -12,6 +13,7 @@ export class PlaceOrderComponent implements OnInit {
   private orderPlaced: boolean = false;
 
   private errorMessage: string;
+  private subscription: Subscription;
 
   constructor(private orderService: OrderService) {
   }
@@ -35,5 +37,6 @@ export class PlaceOrderComponent implements OnInit {
       }
     });
   }
+
 
 }

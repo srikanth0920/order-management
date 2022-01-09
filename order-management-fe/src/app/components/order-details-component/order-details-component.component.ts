@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { VirtualTimeScheduler } from 'rxjs';
+import { Subscription, VirtualTimeScheduler } from 'rxjs';
 import { Order } from '../../model/order';
 import { OrderService } from '../../services/order-service.service';
 
@@ -11,18 +11,21 @@ import { OrderService } from '../../services/order-service.service';
 export class OrderDetailsComponentComponent implements OnInit {
 
   private orders: Order[] = Array<Order>();
+  private subscription: Subscription;
 
   constructor(private orderService: OrderService) { }
 
   ngOnInit() {
-    this.orderService.getOrderdetails().subscribe(data => this.orders = data);
+    console.log('Order details init');
+
+    this.subscription = this.orderService.getOrderdetails().subscribe(data => this.orders = data);
   }
 
   updateOrder(index) {
 
     if (index !== null && index !== '') {
       let order = this.orders[index];
-      this.orderService.updateOrder(order.orderId, order).subscribe(data => {
+      this.subscription = this.orderService.updateOrder(order.orderId, order).subscribe(data => {
       }
       );
     }
@@ -33,12 +36,19 @@ export class OrderDetailsComponentComponent implements OnInit {
 
     if (index !== null && index !== '') {
       let order = this.orders[index];
-      this.orderService.deleteOrder(order.orderId).subscribe(data => {
+      this.subscription = this.orderService.deleteOrder(order.orderId).subscribe(data => {
         //console.log(data);
-        this.orders.splice(index,1);
+        this.orders.splice(index, 1);
       }
       );
     }
 
+  }
+
+  ngOnDestroy() {
+    if (this.subscription != null) {
+      console.log('Order details destroy');
+      this.subscription.unsubscribe();
+    }
   }
 }

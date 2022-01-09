@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Order } from 'src/app/model/order';
 import { OrderService } from 'src/app/services/order-service.service';
 
@@ -11,6 +12,8 @@ import { OrderService } from 'src/app/services/order-service.service';
 export class FindOrderComponent implements OnInit {
 
   private orderId: string;
+
+  private subscription: Subscription;
 
   private order: Order = new Order();
 
@@ -26,12 +29,12 @@ export class FindOrderComponent implements OnInit {
   findOrder(orderId: string) {
 
     if (this.orderId !== null && this.orderId !== '') {
-      this.orderService.findOrder(orderId).subscribe(data => {
-          this.order = data
+      this.subscription = this.orderService.findOrder(orderId).subscribe(data => {
+        this.order = data
       },
-      error => {
-        this.order = null;
-      }
+        error => {
+          this.order = null;
+        }
       );
     }
 
@@ -44,4 +47,7 @@ export class FindOrderComponent implements OnInit {
     })
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

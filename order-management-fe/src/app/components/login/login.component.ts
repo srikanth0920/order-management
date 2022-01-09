@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { BasicAuthService } from 'src/app/services/basicauthservice.service';
 import { JwtAuthService } from 'src/app/services/jwt-auth.service';
 
@@ -13,6 +14,7 @@ export class LoginComponent implements OnInit {
   private username: string;
   private password: string;
   private errorMessage: string;
+  private subscription: Subscription;
 
   constructor(private authService: JwtAuthService, private router: Router) { }
 
@@ -27,7 +29,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.authService.authenticate(this.username, this.password).subscribe(data => {
+    this.subscription = this.authService.authenticate(this.username, this.password).subscribe(data => {
       console.log('User Logged in');
       this.router.navigate(['/home']);
     }, errorResponse => {
@@ -36,4 +38,7 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }
